@@ -1,27 +1,39 @@
-from config import api_host, headers
-from crosscutting.constants import filename, HTTP_POST
+from crosscutting.constants import filename
+from crosscutting.helpers import get_json_dict, dump_to_file
 from flask import Flask, render_template
-from skyscanner_service.payload_builder import get_payload
-import http.client, json
+from skyscanner_service.skyscanner_service import get_flights_synced, get_locales, get_markets, get_currencies
 
 # run app with: flask --app main run --debug
-
 app = Flask(__name__)
 
 @app.route("/get/")
-def api_call():
-    # Get response
-    conn = http.client.HTTPSConnection(api_host)
-    conn.request(HTTP_POST, "/v3e/flights/live/search/synced", get_payload(), headers)
-    response = conn.getresponse()
+def get_flights():
+    source_data = get_flights_synced()
+    json_dictionary = get_json_dict(source_data)
+    dump_to_file(filename, json_dictionary)
 
-    # Process response
-    data = response.read() # Decode from byte format
-    json_response = data.decode('utf-8') # Turns bytes into json
-    json_dictionary = json.loads(json_response) # Turns json into a dictionary
+    return render_template('main.html', input="Flights fetched successfully!")
 
-    # Dump response into a file
-    with open(filename, 'w', encoding='utf-8') as output_file:
-        json.dump(json_dictionary, output_file) # Once the file is created, run prettier on it -> Shift + Alt + F
+@app.route("/locales/")
+def locales():
+    response = get_locales()
+    json_dictionary = get_json_dict(response)
+    dump_to_file('dumps/locales.json', json_dictionary)
 
-    return render_template('main.html', input="Fetch successful!")
+    return render_template('main.html', input="Fetched locales")
+
+@app.route("/markets/")
+def markets():
+    response = get_markets()
+    json_dictionary = get_json_dict(response)
+    dump_to_file('dumps/markets.json', json_dictionary)
+
+    return render_template('main.html', input="Fetched markets")
+
+@app.route("/currencies/")
+def currencies():
+    response = get_currencies()
+    json_dictionary = get_json_dict(response)
+    dump_to_file('dumps/currencies.json', json_dictionary)
+
+    return render_template('main.html', input="Fetched currencies")

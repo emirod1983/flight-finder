@@ -1,5 +1,6 @@
 import json
 
+# Airport codes: https://www.andiamo.co.uk/resources/iso-language-codes/
 def get_payload():
     date = {}
     date['year'] = 2023
