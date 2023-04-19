@@ -3,9 +3,9 @@ from crosscutting.constants import HTTP_GET, HTTP_POST
 from skyscanner_service.payload_builder import get_payload
 import http.client
 
-def get_flights_synced():
+def get_flights_synced(date_from):
     conn = http.client.HTTPSConnection(api_host)
-    conn.request(HTTP_POST, "/v3e/flights/live/search/synced", get_payload(), post_headers)
+    conn.request(HTTP_POST, "/v3e/flights/live/search/synced", get_payload(date_from), post_headers)
     return conn.getresponse()
 
 def get_locales():

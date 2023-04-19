@@ -1,11 +1,12 @@
+import datetime
 import json
 
 # Airport codes: https://www.andiamo.co.uk/resources/iso-language-codes/
-def get_payload():
+def get_payload(date_from):
     date = {}
-    date['year'] = 2023
-    date['month'] = 7
-    date['day'] = 15
+    date['year'] = date_from.year
+    date['month'] = date_from.month
+    date['day'] = date_from.day
 
     originPlaceId = {}
     originPlaceId['iata'] = 'EZE'
