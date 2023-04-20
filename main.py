@@ -4,6 +4,7 @@ from crosscutting.helpers import get_json_dict, dump_to_file
 from flask import Flask, render_template
 from skyscanner_service.skyscanner_service import get_flights_synced, get_locales, get_markets, get_currencies
 
+# sample comment
 # run app with: flask --app main run --debug
 app = Flask(__name__)
 
