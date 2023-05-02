@@ -1,4 +1,5 @@
 import datetime
+from db.transaction_handler import insert_locales
 from crosscutting.constants import filename
 from crosscutting.helpers import get_json_dict, dump_to_file
 from flask import Flask, render_template
@@ -20,7 +21,8 @@ def get_flights():
 def locales():
     response = get_locales()
     json_dictionary = get_json_dict(response)
-    dump_to_file('dumps/locales.json', json_dictionary)
+    insert_locales(json_dictionary['locales'])
+    # dump_to_file('dumps/locales.json', json_dictionary)
 
     return render_template('main.html', input="Fetched locales")
 
