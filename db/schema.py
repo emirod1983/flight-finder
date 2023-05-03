@@ -41,6 +41,26 @@ class Schema:
                 Column('id', Integer, primary_key=True, autoincrement=True),
                 Column('code', String(10)),
                 Column('name', String(250))
+            ),
+            'markets': Table(
+                'markets',
+                self.metadata,
+                Column('id', Integer, primary_key=True, autoincrement=True),
+                Column('code', String(2)),
+                Column('name', String(150)),
+                Column('currency', String(3))
+            ),
+            'currencies': Table(
+                'currencies',
+                self.metadata,
+                Column('id', Integer, primary_key=True, autoincrement=True),
+                Column('code', String(3)),
+                Column('symbol', String(10)),
+                Column('thousandsSeparator', String(10)),
+                Column('decimalSeparator', String(10)),
+                Column('symbolOnLeft', Boolean),
+                Column('spaceBetweenAmountAndSymbol', Boolean),
+                Column('decimalDigits', Integer),
             )
         }
 

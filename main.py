@@ -1,5 +1,5 @@
 import datetime
-from db.transaction_handler import insert_locales
+from db.transaction_handler import insert_currencies, insert_locales, insert_markets, reset_schema
 from crosscutting.constants import filename
 from crosscutting.helpers import get_json_dict, dump_to_file
 from flask import Flask, render_template
@@ -16,6 +16,24 @@ def get_flights():
     dump_to_file(filename, json_dictionary)
 
     return render_template('main.html', input="Flights fetched successfully!")
+
+@app.route("/base_schema/")
+def base():
+    reset_schema()
+
+    currencies = get_currencies()
+    currencies_dictionary = get_json_dict(currencies)
+    insert_currencies(currencies_dictionary['currencies'])
+
+    locales = get_locales()
+    locales_dictionary = get_json_dict(locales)
+    insert_locales(locales_dictionary['locales'])
+
+    markets = get_markets()
+    markets_dictionary = get_json_dict(markets)
+    insert_markets(markets_dictionary['markets'])
+
+    return render_template('main.html', input="Populated database!")
 
 @app.route("/locales/")
 def locales():
