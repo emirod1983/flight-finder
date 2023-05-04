@@ -33,7 +33,7 @@ def base():
     markets_dictionary = get_json_dict(markets)
     insert_markets(markets_dictionary['markets'])
 
-    return render_template('main.html', input="Populated database!")
+    return render_template('main.html', input="Fetched currencies, locales and markets from skyscanner into the database")
 
 @app.route("/locales/")
 def locales():
