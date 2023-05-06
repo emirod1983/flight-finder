@@ -13,6 +13,10 @@ class Schema:
     def drop_all_tables(self):
         self.metadata.drop_all(self.engine)
 
+    def reset_schema(self):
+        self.drop_all_tables()
+        self.create_all_tables()
+
     # Crea el contexto para ejecutar transacciones. Se utiliza cada vez que ejecutamos transacciones.
     # Usarlo con el 'with', asi al terminar el bloque se ejecuta el metodo __exit__ y commitea
     def create_transaction(self):

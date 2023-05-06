@@ -1,11 +1,26 @@
 from db.repositories.locales import LocalesRepository
 from db.schema import Schema
+from crosscutting.helpers import get_json_dict, dump_to_file
 from sqlalchemy import insert
+from skyscanner_service.skyscanner_service import get_flights_synced, get_locales, get_markets, get_currencies
 
-def reset_schema():
+def initialize_schema():
     schema = Schema()
-    schema.drop_all_tables()
-    schema.create_all_tables()
+    schema.reset_schema()
+
+    currencies = get_currencies()
+    currencies_dictionary = get_json_dict(currencies)
+    insert_currencies(currencies_dictionary['currencies'])
+
+    locales = get_locales()
+    locales_dictionary = get_json_dict(locales)
+    # dump_to_file('dumps/locales.json', locales_dictionary)
+    insert_locales(locales_dictionary['locales'])
+
+    markets = get_markets()
+    markets_dictionary = get_json_dict(markets)
+    insert_markets(markets_dictionary['markets'])
+
 
 def insert_locales(locales):
     schema = Schema()

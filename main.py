@@ -1,61 +1,16 @@
-import datetime
-from db.transaction_handler import insert_currencies, insert_locales, insert_markets, reset_schema
-from crosscutting.constants import filename
-from crosscutting.helpers import get_json_dict, dump_to_file
+from business.business import get_flights
+from db.transaction_handler import initialize_schema
 from flask import Flask, render_template
-from skyscanner_service.skyscanner_service import get_flights_synced, get_locales, get_markets, get_currencies
 
 # run app with: flask --app main run --debug
 app = Flask(__name__)
 
 @app.route("/get/")
-def get_flights():
-    date_from = datetime.date(2023, 7, 15)
-    source_data = get_flights_synced(date_from)
-    json_dictionary = get_json_dict(source_data)
-    dump_to_file(filename, json_dictionary)
-
+def flights():
+    get_flights()
     return render_template('main.html', input="Flights fetched successfully!")
 
-@app.route("/base_schema/")
+@app.route("/init_schema/")
 def base():
-    reset_schema()
-
-    currencies = get_currencies()
-    currencies_dictionary = get_json_dict(currencies)
-    insert_currencies(currencies_dictionary['currencies'])
-
-    locales = get_locales()
-    locales_dictionary = get_json_dict(locales)
-    insert_locales(locales_dictionary['locales'])
-
-    markets = get_markets()
-    markets_dictionary = get_json_dict(markets)
-    insert_markets(markets_dictionary['markets'])
-
-    return render_template('main.html', input="Fetched currencies, locales and markets from skyscanner into the database")
-
-@app.route("/locales/")
-def locales():
-    response = get_locales()
-    json_dictionary = get_json_dict(response)
-    insert_locales(json_dictionary['locales'])
-    # dump_to_file('dumps/locales.json', json_dictionary)
-
-    return render_template('main.html', input="Fetched locales")
-
-@app.route("/markets/")
-def markets():
-    response = get_markets()
-    json_dictionary = get_json_dict(response)
-    dump_to_file('dumps/markets.json', json_dictionary)
-
-    return render_template('main.html', input="Fetched markets")
-
-@app.route("/currencies/")
-def currencies():
-    response = get_currencies()
-    json_dictionary = get_json_dict(response)
-    dump_to_file('dumps/currencies.json', json_dictionary)
-
-    return render_template('main.html', input="Fetched currencies")
+    initialize_schema()
+    return render_template('main.html', input="Initialized schema with Skyscanner's currencies, locales and markets")
