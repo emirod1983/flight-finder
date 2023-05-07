@@ -65,6 +65,15 @@ class Schema:
                 Column('symbolOnLeft', Boolean),
                 Column('spaceBetweenAmountAndSymbol', Boolean),
                 Column('decimalDigits', Integer),
+            ),
+            'itineraries': Table(
+                'itineraries',
+                self.metadata,
+                Column('id', Integer, primary_key=True, autoincrement=True),
+                Column('timestamp', String(20)),
+                Column('itineraryId', String(100)),
+                Column('price', String(15)),
+                Column('link', String(1500))
             )
         }
 

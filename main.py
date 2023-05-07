@@ -1,4 +1,4 @@
-from business.business import get_flights
+from business.business import get_flights, handle_flights
 from db.transaction_handler import initialize_schema
 from flask import Flask, render_template
 
@@ -7,7 +7,8 @@ app = Flask(__name__)
 
 @app.route("/get/")
 def flights():
-    get_flights()
+    flights = get_flights()
+    handle_flights(flights)
     return render_template('main.html', input="Flights fetched successfully!")
 
 @app.route("/init_schema/")

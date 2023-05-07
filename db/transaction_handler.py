@@ -1,3 +1,4 @@
+from datetime import datetime
 from db.repositories.locales import LocalesRepository
 from db.schema import Schema
 from crosscutting.helpers import get_json_dict, dump_to_file
@@ -21,7 +22,28 @@ def initialize_schema():
     markets_dictionary = get_json_dict(markets)
     insert_markets(markets_dictionary['markets'])
 
+def insert_itineraries(flights):
+    # TODO: replace this time with the time the query was executed
+    now = datetime.now()
+    timestamp = now.strftime("%m/%d/%Y, %H:%M:%S")
 
+    schema = Schema()
+    with schema.create_transaction() as tx:
+        table = tx.schema.tables['itineraries']
+    
+        for key, value in flights.items():
+            # TODO: Ugly code to be improved one business rules are clearer (likely with joint tables)
+            pricingOptions = value['pricingOptions'][0]
+            items = pricingOptions['items'][0]
+            flight_dto = {
+                'timestamp': timestamp,
+                'itineraryId': key,
+                'price': items['price']['amount'],
+                'link': items['deepLink']
+            }
+            query = insert(table).values(flight_dto)
+            tx.conn.execute(query)
+    
 def insert_locales(locales):
     schema = Schema()
     with schema.create_transaction() as tx:

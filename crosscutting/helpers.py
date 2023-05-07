@@ -10,3 +10,7 @@ def dump_to_file(file_name, file_contents):
     with open(file_name, 'w', encoding='utf-8') as output_file:
         json.dump(file_contents, output_file)
 
+def open_from_file(file_name):
+    with open(file_name) as json_file:
+        data = json.load(json_file)
+    return data
