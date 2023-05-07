@@ -28,7 +28,7 @@ def get_dataset_dictionary(dataset_name):
     else:
         data_source = get_dataset(dataset_name)
         dataset_dictionary = get_json_dict(data_source)
-        dump_to_file('dumps/locales.json', dataset_dictionary)
+        dump_to_file(dataset_path, dataset_dictionary)
 
     return dataset_dictionary
 
